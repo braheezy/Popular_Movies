@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="title_activity_detail">Movie Detail</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    
+    <!-- For the votes to be displayed over. -->
+    <string name="over_10">/10</string>
+
+    <!-- Sort preference goodies -->
+    <string name="pref_sort_key">sort</string>
+    <string name="pref_sort_title">Sort</string>
+    <string name="pref_sort_default">Popular</string>
+
+    <!-- Labels for options in ListPreference-->
+    <string name="pref_sort_label_popular">Popular</string>
+    <string name="pref_sort_label_top_rated">Top Rated</string>
+
+    <!-- Values stored in SharedPreferences -->
+    <string name="pref_sort_popular">popularity.desc</string>
+    <string name="pref_sort_top_rated">vote_count.desc</string>
+
+    <!-- String for sort filter, used with top rated -->
+    <string name="pref_sort_filter">vote_count.gte</string>
+    <string name="pref_sort_min_vote">100</string>
+</resources>

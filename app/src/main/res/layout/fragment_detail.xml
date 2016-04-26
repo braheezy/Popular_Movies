@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.michaelbraha.popular_movies.DetailActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:textSize="34sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/icons"
+        android:id="@+id/movie_title_textview"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="@dimen/detail_image_width"
+            android:layout_height="@dimen/detail_image_height"
+            android:scaleType="fitXY"
+            android:paddingTop="@dimen/top_padding_image_detail"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:id="@+id/movie_poster_imageview"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/top_padding_info"
+            android:paddingLeft="@dimen/left_padding_info"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/secondary_text"
+            android:layout_toRightOf="@id/movie_poster_imageview"
+            android:id="@+id/year_release_date_textview"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="@dimen/left_padding_info"
+            android:paddingTop="@dimen/top_padding_info"
+            android:layout_toRightOf="@id/movie_poster_imageview"
+            android:layout_below="@id/year_release_date_textview"
+            android:id="@+id/vote_textview"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/overview_textview"
+        android:paddingLeft="@dimen/side_padding_overview"
+        android:textColor="@color/secondary_text"
+        android:maxLines="10"
+        android:paddingTop="@dimen/top_padding_overview"
+        android:fontFamily="sans-serif-condensed"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
+        android:layout_weight="1"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/trailer_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+</LinearLayout>

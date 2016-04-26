@@ -1,0 +1,22 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Padding for center section of detail. -->
+    <dimen name="top_padding_image_detail">4dp</dimen>
+    <dimen name="top_padding_info">8dp</dimen>
+    <dimen name="left_padding_info">24dp</dimen>
+
+    <!-- Padding for overview section of detail. -->
+    <dimen name="side_padding_overview">8dp</dimen>
+    <dimen name="top_padding_overview">8dp</dimen>
+
+    <!-- Image aspect ratio for detail activity. -->
+    <dimen name="detail_image_height">225dp</dimen>
+    <dimen name="detail_image_width">150dp</dimen>
+
+    <!-- Image aspect ratio for images in grid view. -->
+    <dimen name="grid_image_height">270dp</dimen>
+    <dimen name="grid_image_width">174dp</dimen>
+</resources>
