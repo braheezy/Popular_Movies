@@ -13,22 +13,25 @@
         android:background="@color/primary"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/side_padding_title"
+        android:paddingRight="@dimen/side_padding_title"
         android:textSize="34sp"
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/icons"
+        android:elevation="10dp"
         android:id="@+id/movie_title_textview"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="3">
 
         <ImageView
             android:layout_width="@dimen/detail_image_width"
             android:layout_height="@dimen/detail_image_height"
             android:scaleType="fitXY"
             android:paddingTop="@dimen/top_padding_image_detail"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/side_padding_image_detail"
             android:id="@+id/movie_poster_imageview"/>
 
         <TextView
@@ -55,28 +58,94 @@
 
     </RelativeLayout>
 
-    <TextView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:id="@+id/overview_textview"
-        android:paddingLeft="@dimen/side_padding_overview"
-        android:textColor="@color/secondary_text"
-        android:maxLines="10"
-        android:paddingTop="@dimen/top_padding_overview"
-        android:fontFamily="sans-serif-condensed"
-        android:scrollbars="vertical"
-        android:fadeScrollbars="false"
-        android:layout_weight="1"/>
+        android:layout_height="2dp"
+        android:layout_marginLeft="@dimen/divider_buffer"
+        android:layout_marginRight="@dimen/divider_buffer"
+        android:layout_marginTop="8dp"
+        android:background="@color/secondary_text"/>
 
-    <FrameLayout
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:fillViewport="true"
+    android:layout_weight="2">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/trailer_view"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:id="@+id/overview_textview"
+            android:paddingLeft="@dimen/side_padding_overview"
+            android:paddingRight="@dimen/side_padding_overview"
+            android:textColor="@color/secondary_text"
+            android:paddingTop="@dimen/top_padding_overview"
+            android:fontFamily="sans-serif-condensed"
+            android:scrollbars="vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="@dimen/divider_buffer"
+            android:layout_marginRight="@dimen/divider_buffer"
+            android:layout_marginTop="8dp"
+            android:background="@color/secondary_text"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginLeft="@dimen/divider_buffer"
+                android:text="@string/trailer_title"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trailer_view"
+                android:paddingLeft="@dimen/divider_buffer"
+                android:paddingRight="@dimen/divider_buffer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="@dimen/divider_buffer"
+        android:layout_marginRight="@dimen/divider_buffer"
+        android:layout_marginTop="8dp"
+        android:background="@color/secondary_text"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginLeft="@dimen/divider_buffer"
+                android:text="Reviews:"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/review_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
 
 </LinearLayout>

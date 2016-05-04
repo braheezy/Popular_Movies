@@ -9,7 +9,7 @@
 
     <!-- Sort preference goodies -->
     <string name="pref_sort_key">sort</string>
-    <string name="pref_sort_title">Sort</string>
+    <string name="pref_sort_title">Sort By</string>
     <string name="pref_sort_default">Popular</string>
 
     <!-- Labels for options in ListPreference-->
@@ -23,4 +23,11 @@
     <!-- String for sort filter, used with top rated -->
     <string name="pref_sort_filter">vote_count.gte</string>
     <string name="pref_sort_min_vote">100</string>
+
+    <!-- String for starting Trailers list -->
+    <string name="trailer_title">Trailers:</string>
+
+    <string name="sample_review">The Revenant, a ravishingly violent Western survival yarn from
+        Alejandro González Iñárritu, has a healthy few, scattered like acorns across its two-and-a-half-hour
+        canvas..... no matter how extended,.</string>
 </resources>

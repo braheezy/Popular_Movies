@@ -3,13 +3,18 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- Padding for title textView for details -->
+    <dimen name="side_padding_title">24dp</dimen>
+
+
     <!-- Padding for center section of detail. -->
-    <dimen name="top_padding_image_detail">4dp</dimen>
-    <dimen name="top_padding_info">8dp</dimen>
+    <dimen name="top_padding_image_detail">16dp</dimen>
+    <dimen name="side_padding_image_detail">24dp</dimen>
+    <dimen name="top_padding_info">16dp</dimen>
     <dimen name="left_padding_info">24dp</dimen>
 
     <!-- Padding for overview section of detail. -->
-    <dimen name="side_padding_overview">8dp</dimen>
+    <dimen name="side_padding_overview">16dp</dimen>
     <dimen name="top_padding_overview">8dp</dimen>
 
     <!-- Image aspect ratio for detail activity. -->
@@ -19,4 +24,7 @@
     <!-- Image aspect ratio for images in grid view. -->
     <dimen name="grid_image_height">270dp</dimen>
     <dimen name="grid_image_width">174dp</dimen>
+
+    <!-- Sets the padding for divider implementation, seen on View and RecycleView in fragment_detail -->
+    <dimen name="divider_buffer">16dp</dimen>
 </resources>

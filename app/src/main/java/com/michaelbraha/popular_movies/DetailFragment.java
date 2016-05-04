@@ -1,6 +1,5 @@
 package com.michaelbraha.popular_movies;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -37,6 +36,10 @@ public class DetailFragment extends Fragment {
     Trailer trailer = new Trailer();
     ArrayList<Trailer> trailers;
 
+    RecyclerView rvReviews;
+    Review review = new Review();
+    ArrayList<Review> reviews;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Configuration screenConfig = getResources().getConfiguration();
@@ -44,6 +47,7 @@ public class DetailFragment extends Fragment {
 
         MovieItem receivedMovieItem = getActivity().getIntent().getParcelableExtra("MovieItemParcel");
         new TrailerTask().execute(receivedMovieItem);
+        new ReviewTask().execute(receivedMovieItem);
 
         ((TextView) rootView.findViewById(R.id.movie_title_textview)).setText(receivedMovieItem.getTitle());
 
@@ -64,9 +68,20 @@ public class DetailFragment extends Fragment {
         overviewTextView.setMovementMethod(new ScrollingMovementMethod());
 
         rvTrailers = (RecyclerView) rootView.findViewById(R.id.trailer_view);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        llm.setOrientation(1);
-        this.rvTrailers.setLayoutManager(llm);
+        LinearLayoutManager trailerLLM = new LinearLayoutManager(getContext());
+        trailerLLM.setOrientation(1);
+        rvTrailers.setLayoutManager(trailerLLM);
+        // Sets the divider
+        rvTrailers.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        rvTrailers.setNestedScrollingEnabled(false);
+
+        rvReviews = (RecyclerView) rootView.findViewById(R.id.review_view);
+        LinearLayoutManager reviewLLM = new LinearLayoutManager(getContext());
+        reviewLLM.setOrientation(1);
+        rvReviews.setLayoutManager(reviewLLM);
+        rvReviews.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        rvReviews.setNestedScrollingEnabled(false);
+
         return rootView;
     }
 
@@ -94,13 +109,13 @@ public class DetailFragment extends Fragment {
                 Uri builtUri;
                 builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendPath(movieId)
-                        .appendPath("videos")
-                        .appendQueryParameter("api_key", id)
+                        .appendPath(VIDEOS)
+                        .appendQueryParameter(ID_PARAM, id)
                         .build();
 
                 URL url = new URL(builtUri.toString());
 
-                Log.d(this.LOG_TAG, url.toString());
+                Log.d(LOG_TAG, url.toString());
 
                 // Create the request to TheMovieDatabase, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -143,17 +158,25 @@ public class DetailFragment extends Fragment {
                     }
                 }
             }
-
             Log.d(LOG_TAG, apiResult);
-            return createYoutubeURLsFromJSON(apiResult);
+
+            String[] youtubeURLs = createYoutubeURLsFromJSON(apiResult);
+            if (youtubeURLs != null) {
+                trailers = Trailer.createTrailerList(youtubeURLs.length);
+                trailer.setURLs(youtubeURLs);
+
+                for (int i = 0; i < youtubeURLs.length; i++) {
+                    trailers.get(i).setIndividualURL(trailer.getSpecificURL(i));
+                }
+            }
+            return youtubeURLs;
         }
 
         private String[] createYoutubeURLsFromJSON(String result) {
             String TMDB_RESULTS = "results";
             String TMDB_KEY = "key";
-            String[] videoKeysArray = new String[0];
+            String[] videoKeysArray = null;
             try {
-
                 JSONArray resultsArray = new JSONObject(result).getJSONArray(TMDB_RESULTS);
                 int numVideos = resultsArray.length();
                 videoKeysArray = new String[numVideos];
@@ -164,11 +187,6 @@ public class DetailFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            for (String s : videoKeysArray) {
-                Log.d(LOG_TAG, "Key for video: " + s);
-            }
-
             return createYoutubeURLs(videoKeysArray);
         }
 
@@ -183,21 +201,9 @@ public class DetailFragment extends Fragment {
         }
 
         protected void onPostExecute(String[] youtubeURLs) {
-            if (youtubeURLs != null) {
-                for (String s : youtubeURLs){
-                    Log.d("Youtube URLs: ", s);
-                }
-
-                Context context = getContext();
-                trailers = Trailer.createTrailerList(youtubeURLs.length);
-
-                trailer.setURLs(youtubeURLs);
                 rvTrailers.setAdapter(new TrailerAdapter(trailers));
-                for (int i = 0; i < youtubeURLs.length; i++) {
-                    trailers.get(i).setIndividualURL(trailer.getSpecificURL(i));
-                }
                 rvTrailers.addOnItemTouchListener(
-                        new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                        new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                             public void onItemClick(View view, int position) {
                                 boolean isIntentSafe = false;
                                 Intent videoIntent = new Intent("android.intent.action.VIEW", Uri
@@ -213,7 +219,121 @@ public class DetailFragment extends Fragment {
                             }
                         })
                 );
+
+        }
+    }
+
+    public class ReviewTask extends AsyncTask<MovieItem, Void, String[]>{
+        private final String LOG_TAG = ReviewTask.class.getSimpleName();
+
+        @Override
+        protected String[] doInBackground(MovieItem... params) {
+            if (params.length == 0) {
+                return null;
             }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String id = BuildConfig.THE_MOVIE_DATABASE_API_KEY;
+            String movieId = params[0].getMovieId();
+            String apiResult;
+
+            try {
+                String MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie";
+                String REVIEWS = "reviews";
+                String ID_PARAM = "api_key";
+
+                Uri builtUri;
+                builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                        .appendPath(movieId)
+                        .appendPath(REVIEWS)
+                        .appendQueryParameter(ID_PARAM, id)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                Log.d(LOG_TAG, url.toString());
+
+                // Create the request to TheMovieDatabase, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuilder builder = new StringBuilder();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line + "\n");
+                }
+
+                if (builder.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    apiResult = null;
+                }
+
+                apiResult = builder.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            Log.d(LOG_TAG, apiResult);
+            String[] reviewResults = createReviewsFromJSON(apiResult);
+            if (reviewResults != null) {
+                reviews = Review.createReviewList(reviewResults.length);
+                review.setReviews(reviewResults);
+                for (int i = 0; i < reviewResults.length; i++) {
+                    reviews.set(i, review);
+                }
+            }
+            return reviewResults;
+        }
+
+        private String[] createReviewsFromJSON(String result){
+            String TMDB_RESULTS = "results";
+            String TMDB_AUTHOR = "author";
+            String TMDB_CONTENT = "content";
+
+            String[] reviewsArray = null;
+
+            try {
+                JSONArray resultsArray = new JSONObject(result).getJSONArray(TMDB_RESULTS);
+                int numReviews = resultsArray.length();
+                reviewsArray = new String[numReviews];
+
+                for (int i = 0; i < numReviews; i++) {
+                    String author = resultsArray.getJSONObject(i).getString(TMDB_AUTHOR);
+                    String review = resultsArray.getJSONObject(i).getString(TMDB_CONTENT);
+                    reviewsArray[i] = author + "*" + review;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return reviewsArray;
+        }
+
+        protected void onPostExecute (String[] reviewResults){
+                rvReviews.setAdapter(new ReviewAdapter(reviews));
         }
     }
 }
