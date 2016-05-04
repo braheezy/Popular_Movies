@@ -20,6 +20,7 @@ public class DetailActivity extends AppCompatActivity {
                     .add(R.id.container, new DetailFragment())
                     .commit();
         }
+        getSupportActionBar().setElevation(2f);
     }
 
     @Override

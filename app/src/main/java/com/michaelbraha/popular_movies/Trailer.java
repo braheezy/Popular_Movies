@@ -8,48 +8,33 @@ public class Trailer {
     private String[] mTrailers;
 
     public Trailer(){
-
     }
+
     public Trailer(String name) {
-        this.mTrailerName = name;
+        mTrailerName = name;
     }
 
     public String getName() {
-        return this.mTrailerName;
-    }
-
-    public boolean hasTrailers() {
-        if (this.mTrailers != null) {
-            return true;
-        }
-        return false;
-    }
-
-    public String[] getTrailers() {
-        return this.mTrailers;
+        return mTrailerName;
     }
 
     public void setIndividualURL(String individualURL) {
-        this.mIndividualURL = individualURL;
+        mIndividualURL = individualURL;
     }
 
     public String getIndividualURL() {
-        return this.mIndividualURL;
+        return mIndividualURL;
     }
 
     public void setURLs(String[] trailers) {
-        this.mTrailers = trailers;
-    }
-
-    public String[] getURLs() {
-        return this.mTrailers;
+        mTrailers = trailers;
     }
 
     public String getSpecificURL(int position) {
-        if (this.mTrailers == null || position > this.mTrailers.length) {
+        if (mTrailers == null || position > mTrailers.length) {
             return null;
         }
-        return this.mTrailers[position];
+        return mTrailers[position];
     }
 
     public static ArrayList<Trailer> createTrailerList(int numTrailers) {
