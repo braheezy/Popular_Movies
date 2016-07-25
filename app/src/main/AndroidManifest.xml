@@ -35,6 +35,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+        <provider
+            android:authorities="com.michaelbraha.popular_movies.data"
+            android:name=".data.FavoriteProvider"/>
     </application>
 
 </manifest>

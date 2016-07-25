@@ -27,7 +27,15 @@
     <!-- String for starting Trailers list -->
     <string name="trailer_title">Trailers:</string>
 
+    <!-- String for favorite button -->
+    <string name="favorite">ADD TO FAVORITES</string>
+    <string name="action_favorite">Favorites</string>
+
     <string name="sample_review">The Revenant, a ravishingly violent Western survival yarn from
         Alejandro González Iñárritu, has a healthy few, scattered like acorns across its two-and-a-half-hour
         canvas..... no matter how extended,.</string>
+
+
+
+
 </resources>

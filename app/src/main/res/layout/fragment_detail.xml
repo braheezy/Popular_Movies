@@ -56,6 +56,20 @@
             android:layout_below="@id/year_release_date_textview"
             android:id="@+id/vote_textview"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/favorite_button"
+            android:text="@string/favorite"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:background="@drawable/apptheme_btn_default_holo_light"
+            android:layout_marginTop="@dimen/top_padding_info"
+            android:layout_marginLeft="@dimen/left_padding_info"
+            android:layout_toRightOf="@id/movie_poster_imageview"
+
+            android:layout_below="@id/vote_textview" />
+
     </RelativeLayout>
 
     <View

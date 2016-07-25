@@ -1,4 +1,4 @@
-package com.michaelbraha.popular_movies;
+package com.michaelbraha.popular_movies.objects;
 
 import java.util.ArrayList;
 

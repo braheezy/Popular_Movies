@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.michaelbraha.popular_movies.adapters.GridViewAdapter;
+import com.michaelbraha.popular_movies.objects.MovieItem;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +34,8 @@ import java.util.ArrayList;
  */
 public class MovieFragment extends Fragment {
 
-    private GridViewAdapter mGridViewAdapter;
-    private ArrayList<MovieItem> mGridData;
+    public GridViewAdapter mGridViewAdapter;
+    public ArrayList<MovieItem> mGridData;
     private MovieItem movieItem;
 
 
@@ -49,22 +52,6 @@ public class MovieFragment extends Fragment {
             mGridData = savedInstanceState.getParcelableArrayList("items");
         }
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if(id == R.id.action_settings){
-//            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//            String sortType = sharedPref.getString(
-//                    getString(R.string.pref_sort_key),
-//                    getString(R.string.pref_sort_label_popular));
-//            )
-//        }
-//
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState){
@@ -114,6 +101,81 @@ public class MovieFragment extends Fragment {
 
         return rootView;
     }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        if(id == R.id.action_favorite){
+//            Log.d("Menu", "Favorite selected");
+//            if(mGridData != null) {
+//                mGridData.clear();
+//            }
+//            mGridData = readDatabase();
+//            mGridViewAdapter.setGridData(mGridData);
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+
+//    public ArrayList<MovieItem> readDatabase() {
+//        String image;
+//        String title;
+//        String overview;
+//        String vote;
+//        String date;
+//        String movieId;
+//
+//        MovieItem builtFromDatabaseMovieItem = new MovieItem();
+//        ArrayList<MovieItem> gridData = new ArrayList<MovieItem>();
+//
+//        Cursor favoriteCursor = getContext().getContentResolver().query(
+//                FavoriteContract.FavoriteEntry.CONTENT_URI,
+//                null,
+//                null,
+//                null,
+//                null
+//        );
+//
+//
+//        try {
+//            while (favoriteCursor.moveToNext()) {
+//                int imageColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_IMAGE);
+//                image = favoriteCursor.getString(imageColumn);
+//                Log.d("Read Database check", image);
+//
+//                int titleColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_TITLE);
+//                title = favoriteCursor.getString(titleColumn);
+//                Log.d("Read Database check", title);
+//
+//                int overviewColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW);
+//                overview = favoriteCursor.getString(overviewColumn);
+//                Log.d("Read Database check", overview);
+//
+//                int voteColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_VOTE);
+//                vote = favoriteCursor.getString(voteColumn);
+//                Log.d("Read Database check", vote);
+//
+//                int dateColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE);
+//                date = favoriteCursor.getString(dateColumn);
+//                Log.d("Read Database check", date);
+//
+//                int movieIdColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID);
+//                movieId = favoriteCursor.getString(movieIdColumn);
+//                Log.d("Read Database check", movieId);
+//
+//                builtFromDatabaseMovieItem.setEntireMovieItem(image, title, overview, vote, date, movieId);
+//                gridData.add(builtFromDatabaseMovieItem);
+//            }
+//        } finally {
+//            favoriteCursor.close();
+//        }
+//
+//        return gridData;
+//
+//    }
+
+
 
     public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();

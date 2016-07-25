@@ -1,4 +1,4 @@
-package com.michaelbraha.popular_movies;
+package com.michaelbraha.popular_movies.helpers;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.michaelbraha.popular_movies.R;
 
 /* Code provided by StackOverflow answer here:
 *  http://stackoverflow.com/questions/31242812/how-to-add-divider-line-in-recyclerview-in-android

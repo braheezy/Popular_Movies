@@ -1,4 +1,4 @@
-package com.michaelbraha.popular_movies;
+package com.michaelbraha.popular_movies.helpers;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

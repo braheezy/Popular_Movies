@@ -1,4 +1,4 @@
-package com.michaelbraha.popular_movies;
+package com.michaelbraha.popular_movies.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,6 +27,16 @@ public class MovieItem implements Parcelable {
         this.mReleaseDate = extractReleaseData(fullPath);
         this.mMovieId = extractMovieId(fullPath);
 
+    }
+
+    public void setEntireMovieItem(String image, String title, String overview, String vote,
+                     String date, String movieId) {
+        this.mImageUrl = image;
+        this.mTitle = title;
+        this.mOverview = overview;
+        this.mVote = vote;
+        this.mReleaseDate = date;
+        this.mMovieId = movieId;
     }
 
     private MovieItem(Parcel in){
@@ -93,6 +103,7 @@ public class MovieItem implements Parcelable {
     public String getMovieId(){
         return mMovieId;
     }
+
 
     public String extractImageUrl(String result){
         String url;
