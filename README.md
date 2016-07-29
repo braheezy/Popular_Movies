@@ -9,6 +9,6 @@ Simply create a login, get a key, and put it into the app/build.gradle file in t
 I accidently pushed the API key in a past commit, a huge no-no. Being unable to figure out the tools outlined by [Github](https://help.github.com/articles/remove-sensitive-data/ "Remove Sensitive Info") on how to remove this, I destroyed the repo, created a new project from scratch, and painstakingly copied everything over. Therefor, this current repo doesn't reflect about 75 commits for the project. Lesson Learned
 
 # Libraries
-[Picasso](http://square.github.io/picasso/)
+[Picasso](http://square.github.io/picasso/): Optimized image loading and caching.
 
-[LikeButton](https://github.com/jd-alexander/LikeButton)
+[LikeButton](https://github.com/jd-alexander/LikeButton): Sexy, animated like buttons!!
