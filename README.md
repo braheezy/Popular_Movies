@@ -10,4 +10,5 @@ I accidently pushed the API key in a past commit, a huge no-no. Being unable to 
 
 # Libraries
 [Picasso](http://square.github.io/picasso/)
+
 [LikeButton](https://github.com/jd-alexander/LikeButton)
