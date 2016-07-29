@@ -8,12 +8,63 @@ import android.os.Parcelable;
  */
 public class MovieItem implements Parcelable {
 
+    int _id;
     private String mImageUrl;
     private String mTitle;
     private String mOverview;
     private String mVote;
     private String mReleaseDate;
     private String mMovieId;
+
+    public int getID() {
+        return _id;
+    }
+    public void setID(int _id) {
+        this._id = _id;
+    }
+
+    public String getImage() {
+        return mImageUrl;
+    }
+    public void setImage(String img) {
+        this.mImageUrl = img;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
+    public String getOverview() {
+        return mOverview;
+    }
+    public void setOverview(String overview) {
+        this.mOverview = overview;
+    }
+
+    public String getVote() {
+        return mVote;
+    }
+    public void setVote(String vote) {
+        this.mVote = vote;
+    }
+
+    public String getReleaseDate() {
+        return mReleaseDate;
+    }
+    public void setReleaseDate(String releaseDate) {
+        this.mReleaseDate = releaseDate;
+    }
+
+    public String getMovieId(){
+        return mMovieId;
+    }
+    public void setMovieId(String movieId) {
+        this.mMovieId = movieId;
+    }
+
 
     public MovieItem() {
         super();
@@ -29,8 +80,9 @@ public class MovieItem implements Parcelable {
 
     }
 
-    public void setEntireMovieItem(String image, String title, String overview, String vote,
-                     String date, String movieId) {
+    public MovieItem (int id, String image, String title, String overview,
+                     String vote, String date, String movieId) {
+        this._id = id;
         this.mImageUrl = image;
         this.mTitle = title;
         this.mOverview = overview;
@@ -76,35 +128,6 @@ public class MovieItem implements Parcelable {
         }
     };
 
-    public String getImage() {
-        return mImageUrl;
-    }
-
-    public void setImage(String img) {
-        this.mImageUrl = img;
-    }
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public String getOverview() {
-        return mOverview;
-    }
-
-    public String getVote() {
-        return mVote;
-    }
-
-    public String getReleaseDate() {
-        return mReleaseDate;
-    }
-
-    public String getMovieId(){
-        return mMovieId;
-    }
-
-
     public String extractImageUrl(String result){
         String url;
         String[] parts = extractDataIntoParts(result);
@@ -147,8 +170,9 @@ public class MovieItem implements Parcelable {
         return id;
     }
 
-
     public String[] extractDataIntoParts(String result){
         return result.split("\\*");
     }
+
+
 }

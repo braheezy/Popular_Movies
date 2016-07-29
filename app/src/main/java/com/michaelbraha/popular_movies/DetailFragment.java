@@ -1,11 +1,8 @@
 package com.michaelbraha.popular_movies;
 
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,13 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.michaelbraha.popular_movies.adapters.ReviewAdapter;
 import com.michaelbraha.popular_movies.adapters.TrailerAdapter;
-import com.michaelbraha.popular_movies.data.FavoriteContract;
+import com.michaelbraha.popular_movies.data.DatabaseHandler;
 import com.michaelbraha.popular_movies.helpers.RecyclerItemClickListener;
 import com.michaelbraha.popular_movies.helpers.SimpleDividerItemDecoration;
 import com.michaelbraha.popular_movies.objects.MovieItem;
@@ -55,6 +53,7 @@ public class DetailFragment extends Fragment {
 
     private Context mContext;
 
+    public DatabaseHandler db;
     public DetailFragment(){
 
     }
@@ -62,16 +61,11 @@ public class DetailFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContext = getContext();
+        db = new DatabaseHandler(mContext);
         Configuration screenConfig = getResources().getConfiguration();
         final View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         final MovieItem receivedMovieItem = getActivity().getIntent().getParcelableExtra("MovieItemParcel");
-        Log.d("receivedMovieItem", receivedMovieItem.getImage());
-        Log.d("receivedMovieItem", receivedMovieItem.getTitle());
-        Log.d("receivedMovieItem", receivedMovieItem.getOverview());
-        Log.d("receivedMovieItem", receivedMovieItem.getVote());
-        Log.d("receivedMovieItem", receivedMovieItem.getReleaseDate());
-        Log.d("receivedMovieItem", receivedMovieItem.getMovieId());
         new TrailerTask().execute(receivedMovieItem);
         new ReviewTask().execute(receivedMovieItem);
 
@@ -109,132 +103,26 @@ public class DetailFragment extends Fragment {
         rvReviews.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         rvReviews.setNestedScrollingEnabled(false);
 
-        Button favoriteButton = (Button) rootView.findViewById(R.id.favorite_button);
-        favoriteButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                addFavoriteMovie(
-                        receivedMovieItem.getImage(),
-                        receivedMovieItem.getTitle(),
-                        receivedMovieItem.getOverview(),
-                        receivedMovieItem.getVote(),
-                        receivedMovieItem.getReleaseDate(),
-                        receivedMovieItem.getMovieId());
-                Log.d("OnClick", "at the end of OnClick");
-
+        LikeButton favoriteButton = (LikeButton) rootView.findViewById(R.id.favorite_button);
+        boolean movieAlreadyLiked = db.checkIfDataExists(receivedMovieItem.getTitle());
+        if (movieAlreadyLiked) {
+            favoriteButton.setLiked(true);
+        }
+        else {
+            favoriteButton.setLiked(false);
+        }
+        favoriteButton.setOnLikeListener(new OnLikeListener(){
+            @Override
+            public void liked(LikeButton favoriteButton) {
+                db.addFavorite(receivedMovieItem);
+            }
+            @Override
+            public void unLiked(LikeButton favoriteButton) {
+                db.deleteFavorite(receivedMovieItem.getTitle());
             }
         });
-
         return rootView;
     }
-
-    // Helper method to handle insertion of a new movie to favorite database
-    private long addFavoriteMovie(String image, String title, String overview, String vote, String date, String id) {
-
-        long favoriteId;
-
-        // First, check if the movie already exists in the db
-        Cursor favoriteCursor = mContext.getContentResolver().query(
-                FavoriteContract.FavoriteEntry.CONTENT_URI,
-                new String[]{FavoriteContract.FavoriteEntry._ID},
-                FavoriteContract.FavoriteEntry.COLUMN_TITLE + " = ?",
-                new String[] {title},
-                null);
-
-        if (favoriteCursor.moveToFirst()) {
-            int favoriteIdIndex = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry._ID);
-            favoriteId = favoriteCursor.getLong(favoriteIdIndex);
-        } else {
-            // Now that the content provider is set up, inserting rows of data is pretty simple.
-            // First create a ContentValues object to hold the data you want to insert.
-            ContentValues favoriteValues = new ContentValues();
-
-            // Then add the data, along with the corresponding name of the data type,
-            // so the content provider know what kind of value is being inserted.
-            favoriteValues.put(FavoriteContract.FavoriteEntry.COLUMN_IMAGE, image);
-            favoriteValues.put(FavoriteContract.FavoriteEntry.COLUMN_TITLE, title);
-            favoriteValues.put(FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW, overview);
-            favoriteValues.put(FavoriteContract.FavoriteEntry.COLUMN_VOTE, vote);
-            favoriteValues.put(FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE, date);
-            favoriteValues.put(FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID, id);
-
-            // Finally, insert favorite data into the db
-            Uri insertedUri = mContext.getContentResolver().insert(
-                    FavoriteContract.FavoriteEntry.CONTENT_URI,
-                    favoriteValues
-            );
-
-            // The resulting URI contains the ID for the row. Extract the favoriteId from the Uri
-            favoriteId = ContentUris.parseId(insertedUri);
-        }
-
-        Log.d("addFavorite", "Movie should have been added");
-        favoriteCursor.close();
-        readDatabase();
-        return favoriteId;
-    }
-
-    public ArrayList<MovieItem> readDatabase() {
-        String image;
-        String title;
-        String overview;
-        String vote;
-        String date;
-        String movieId;
-
-        MovieItem builtFromDatabaseMovieItem = new MovieItem();
-        ArrayList<MovieItem> gridData = new ArrayList<MovieItem>();
-
-        Cursor favoriteCursor = getContext().getContentResolver().query(
-                FavoriteContract.FavoriteEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-
-        if (favoriteCursor.moveToFirst()){
-            Log.d("readDatabase", "Move to First Successful");
-            int imageColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_IMAGE);
-            image = favoriteCursor.getString(imageColumn);
-            Log.d("Read Database check", image);
-        }
-        if (favoriteCursor.moveToNext()){
-            Log.d("readDatabase", "Move to Next Successful");
-            int imageColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_IMAGE);
-            image = favoriteCursor.getString(imageColumn);
-            Log.d("Read Database check", image);
-        }
-//        int imageColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_IMAGE);
-//        image = favoriteCursor.getString(imageColumn);
-//        Log.d("Read Database check", image);
-//
-//        int titleColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_TITLE);
-//        title = favoriteCursor.getString(titleColumn);
-//        Log.d("Read Database check", title);
-//
-//        int overviewColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_OVERVIEW);
-//        overview = favoriteCursor.getString(overviewColumn);
-//        Log.d("Read Database check", overview);
-//
-//        int voteColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_VOTE);
-//        vote = favoriteCursor.getString(voteColumn);
-//        Log.d("Read Database check", vote);
-//
-//        int dateColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_RELEASE_DATE);
-//        date = favoriteCursor.getString(dateColumn);
-//        Log.d("Read Database check", date);
-//
-//        int movieIdColumn = favoriteCursor.getColumnIndex(FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID);
-//        movieId = favoriteCursor.getString(movieIdColumn);
-//        Log.d("Read Database check", movieId);
-//
-//        builtFromDatabaseMovieItem.setEntireMovieItem(image, title, overview, vote, date, movieId);
-//        gridData.add(builtFromDatabaseMovieItem);
-
-        return gridData;
-
-    }
-
 
     public class TrailerTask extends AsyncTask<MovieItem, Void, String[]> {
         private final String LOG_TAG = TrailerTask.class.getSimpleName();
@@ -265,8 +153,10 @@ public class DetailFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-
-                Log.d(LOG_TAG, url.toString());
+                /**
+                 * Uncomment for goodies in log
+                 */
+//                Log.d(LOG_TAG, url.toString());
 
                 // Create the request to TheMovieDatabase, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -309,13 +199,15 @@ public class DetailFragment extends Fragment {
                     }
                 }
             }
-            Log.d(LOG_TAG, apiResult);
+            /**
+             * Uncomment for goodies in log
+             */
+//            Log.d(LOG_TAG, apiResult);
 
             String[] youtubeURLs = createYoutubeURLsFromJSON(apiResult);
             if (youtubeURLs != null) {
                 trailers = Trailer.createTrailerList(youtubeURLs.length);
                 trailer.setURLs(youtubeURLs);
-
                 for (int i = 0; i < youtubeURLs.length; i++) {
                     trailers.get(i).setIndividualURL(trailer.getSpecificURL(i));
                 }
@@ -331,7 +223,6 @@ public class DetailFragment extends Fragment {
                 JSONArray resultsArray = new JSONObject(result).getJSONArray(TMDB_RESULTS);
                 int numVideos = resultsArray.length();
                 videoKeysArray = new String[numVideos];
-
                 for (int i = 0; i < numVideos; i++) {
                     videoKeysArray[i] = resultsArray.getJSONObject(i).getString(TMDB_KEY);
                 }
@@ -370,7 +261,6 @@ public class DetailFragment extends Fragment {
                             }
                         })
                 );
-
         }
     }
 
@@ -403,8 +293,10 @@ public class DetailFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-
-                Log.d(LOG_TAG, url.toString());
+                /**
+                 * Uncomment for goodies in log
+                 */
+//                Log.d(LOG_TAG, url.toString());
 
                 // Create the request to TheMovieDatabase, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -447,8 +339,10 @@ public class DetailFragment extends Fragment {
                     }
                 }
             }
-
-            Log.d(LOG_TAG, apiResult);
+            /**
+             * Uncomment for goodies in log
+             */
+//            Log.d(LOG_TAG, apiResult);
             String[] reviewResults = createReviewsFromJSON(apiResult);
             if (reviewResults != null) {
                 reviews = Review.createReviewList(reviewResults.length);

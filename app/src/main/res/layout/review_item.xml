@@ -8,7 +8,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="rahuliam"
         android:textColor="@color/primary_text"
         android:paddingTop="8dp"
         android:fontFamily="sans-serif-black"
@@ -25,8 +24,7 @@
         android:paddingRight="16dp"
         android:fontFamily="sans-serif-condensed"
         android:id="@+id/review_textview"
-        android:paddingBottom="8dp"
-        android:text="@string/sample_review"/>
+        android:paddingBottom="8dp"/>
 
 
 

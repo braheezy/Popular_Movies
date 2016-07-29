@@ -29,16 +29,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        MovieFragment fragment = (MovieFragment) getSupportFragmentManager().findFragmentById(R.id.container);
-
         if(id == R.id.action_settings){
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
-//        if(id == R.id.action_favorite){
-//            fragment.readDatabase();
-//        }
         return super.onOptionsItemSelected(item);
     }
 }

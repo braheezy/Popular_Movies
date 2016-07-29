@@ -20,7 +20,6 @@ public class GridViewAdapter extends ArrayAdapter<MovieItem> {
 
     private Context mContext;
     private ArrayList<MovieItem> gridData = new ArrayList<MovieItem>();
-    private int layoutResourceId;
     private LayoutInflater inflater;
 
     public GridViewAdapter(Context context, ArrayList<MovieItem> items) {
@@ -57,5 +56,12 @@ public class GridViewAdapter extends ArrayAdapter<MovieItem> {
         Picasso.with(mContext).load(item.getImage()).into(imageView);
 
         return view;
+    }
+
+    public void refresh(ArrayList<MovieItem> items) {
+        gridData.clear();
+        notifyDataSetChanged();
+        gridData.addAll(items);
+        notifyDataSetChanged();
     }
 }
